@@ -3,6 +3,8 @@ package com.greenrent.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.greenrent.domain.ContactMessage;
@@ -48,6 +50,10 @@ public class ContactMessageService {
 		foundMessage.setBody(newContactMessage.getBody());
 		
 		repository.save(foundMessage);
+	}
+	
+	public Page<ContactMessage> getAllWithPage(Pageable pageable){
+		return repository.findAll(pageable);
 	}
 
 }

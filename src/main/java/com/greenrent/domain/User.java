@@ -41,7 +41,7 @@ public class User {
 	@Column(length = 20, nullable = false, unique = true)
 	private String email;
 	
-	@Column(length =120, nullable = false)
+	@Column(length = 120, nullable = false)
 	private String password;
 	
 	@Column(length = 14,nullable = false)
@@ -56,10 +56,11 @@ public class User {
 	@Column(nullable = false)
 	private Boolean builtIn=false;
 	
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tbl_user_roles",
 	joinColumns = @JoinColumn(name = "user_id"),
-	inverseJoinColumns=@JoinColumn(name="role_id"))
+	inverseJoinColumns = @JoinColumn(name="role_id"))
 	private Set<Role> roles= new HashSet<>();
 	
 	

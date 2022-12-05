@@ -4,4 +4,13 @@ public class ErrorMessage {
 
 	public final static String RESOURCE_NOT_FOUND_MESSAGE="Resource with id %d not found";
 	
+	
+	public final static String USER_NOT_FOUND_MESSAGE="Username with email %d not found";
+	
+	public final static String EMAIL_ALREADY_EXIST_MESSAGE="Email: %s already exists";
+	
+	public final static String ROLE_NOT_FOUND_MESSAGE="ROLE with name %s not found";
+
+	public final static String JWTTOKEN_ERROR_MESSAGE="JWT Token Validation Error: %s";
+	
 }

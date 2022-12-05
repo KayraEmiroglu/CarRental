@@ -38,7 +38,7 @@ public class ContactMessage implements Serializable{
 	
 	@Size(min = 1,max = 50,message = "Your Name '${validatedValue}' must be between {min} and {max} chars long")
 	@NotNull(message = "Please provide your name")
-	@Column(length = 50,nullable = false)
+	@Column(length = 50, nullable = false)
 	private String name;
 	
 	@Size(min = 5,max = 50,message = "Your Subject '${validatedValue}' must be between {min} and {max} chars long")

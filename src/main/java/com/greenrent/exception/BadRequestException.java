@@ -3,6 +3,8 @@ package com.greenrent.exception;
 
 public class BadRequestException extends RuntimeException{
 	
+	
+
 	/**
 	 * 
 	 */

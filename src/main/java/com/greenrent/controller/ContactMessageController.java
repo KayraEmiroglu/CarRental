@@ -43,6 +43,7 @@ public class ContactMessageController {
 	@Autowired
 	private ContactMessageService contactMessageService;
 	
+	
 	@PostMapping("/visitors")
 	public ResponseEntity<Map<String,String>> createMessage(@Valid @RequestBody ContactMessage contactMessage){
 		contactMessageService.createContactMessage(contactMessage);
@@ -106,6 +107,4 @@ public class ContactMessageController {
 		return ResponseEntity.ok(contactMessagePage);
 	}
 	
-	
-
 }

@@ -2,10 +2,16 @@ package com.greenrent.service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.greenrent.domain.Role;
 import com.greenrent.domain.User;
@@ -13,6 +19,9 @@ import com.greenrent.domain.enums.RoleType;
 import com.greenrent.dto.UserDTO;
 import com.greenrent.dto.mapper.UserMapper;
 import com.greenrent.dto.request.RegisterRequest;
+import com.greenrent.dto.request.UpdatePasswordRequest;
+import com.greenrent.dto.request.UserUpdateRequest;
+import com.greenrent.exception.BadRequestException;
 import com.greenrent.exception.ConflictException;
 import com.greenrent.exception.ResourceNotFoundException;
 import com.greenrent.exception.message.ErrorMessage;
@@ -67,6 +76,21 @@ public class UserService {
 		
 		return userMapper.map(users);
 	}
+	
+	public Page<UserDTO> getUserPage(Pageable pageable){
+		Page<User> users =userRepository.findAll(pageable);
+		
+		Page<UserDTO> dtoPage =users.map(new Function<User,UserDTO>(){
+
+			@Override
+			public UserDTO apply(User user) {
+				
+				return userMapper.userToUserDTO(user);
+			}
+		});
+		
+		return dtoPage;
+	}
 
 
 	public UserDTO findById(Long id) {
@@ -74,6 +98,59 @@ public class UserService {
 		new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
 		
 		return userMapper.userToUserDTO(user);
+	}
+	
+	public void updatePassword(Long id, UpdatePasswordRequest passwordRequest) {
+		Optional<User> userOpt =userRepository.findById(id);
+		
+		User user=userOpt.get();
+		
+		if(user.getBuiltIn()) {
+			throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
+		}
+		
+		//hashlemek geri dönülemeyen bir algoritma yapar.
+		//ikincisini de hashliyoruz arkadaki işlemleri karşılaştırıyoruz.
+		if(!BCrypt.hashpw(passwordRequest.getOldPassword(), user.getPassword()).equals(user.getPassword())) {
+			throw new BadRequestException(ErrorMessage.PASSWORD_NOT_MATHCED_MESSAGE);
+		}
+		
+		String hashedPassword = passwordEncoder.encode(passwordRequest.getNewPassword());
+		user.setPassword(hashedPassword);
+		
+		userRepository.save(user);
+	}
+	
+	//Bu method için Ayrı bir transactional açılıyor Bu method kullanılınca bitiyor.
+	//Birbirlerini etkileyen işlemler bir transaction'ın içinde yapılır eğer transaction'ın içinded bir 
+	//hata dönerse yapılan bütün işlemler geri alınır.
+	@Transactional
+	public void updateUser(Long id, UserUpdateRequest userUpdateRequest) {
+		
+		boolean emailExist = userRepository.existsByEmail(userUpdateRequest.getEmail());
+		Optional<User> userOpt=userRepository.findById(id);
+		User user=userOpt.get();
+		
+		if(user.getBuiltIn()) {
+			throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
+		}
+		if(emailExist && !userUpdateRequest.getEmail().equals(user.getEmail())) {
+			throw new ConflictException(ErrorMessage.EMAIL_ALREADY_EXIST_MESSAGE);
+		}
+		
+		userRepository.update(id,userUpdateRequest.getFirstName(),userUpdateRequest.getLastName(),userUpdateRequest.getPhoneNumber()
+				,userUpdateRequest.getEmail(),userUpdateRequest.getAddress(),userUpdateRequest.getZipCode());
+		
+	}
+	
+	public void removeById(Long id) {
+		User user =userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
+		
+		if(user.getBuiltIn()) {
+			throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
+		}
+		
+		userRepository.deleteById(id);
 	}
 	
 

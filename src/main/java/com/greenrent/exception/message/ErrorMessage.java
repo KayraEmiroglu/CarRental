@@ -13,4 +13,8 @@ public class ErrorMessage {
 
 	public final static String JWTTOKEN_ERROR_MESSAGE="JWT Token Validation Error: %s";
 	
+	public final static String NOT_PERMITTED_METHOD_MESSAGE="You dont have any permission to change this value";
+	
+	public final static String PASSWORD_NOT_MATHCED_MESSAGE="Your password are not matched";
+	
 }

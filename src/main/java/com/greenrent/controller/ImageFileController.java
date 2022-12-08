@@ -1,6 +1,10 @@
 package com.greenrent.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.greenrent.domain.ImageFile;
+import com.greenrent.dto.ImageFileDTO;
 import com.greenrent.dto.response.ImageSavedResponse;
 import com.greenrent.dto.response.ResponseMessage;
 import com.greenrent.service.ImageFileService;
@@ -47,5 +52,25 @@ public class ImageFileController {
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+imageFile.getName()+"").
 				body(imageFile.getData());
 	}
+	
+	@GetMapping("/display/{id}")
+	public ResponseEntity<byte[]> displayFile(@PathVariable String id){
+		ImageFile imageFile = imageFileService.getImageById(id);
+		
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.IMAGE_PNG);
+		
+		return new ResponseEntity<>(imageFile.getData(),header,HttpStatus.OK);
+	}
+	
+	@GetMapping
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<ImageFileDTO>> getAllImages(){
+		List<ImageFileDTO> imageList=imageFileService.getAllImages();
+	
+		return ResponseEntity.ok(imageList);
+	}
+	
+	
 
 }

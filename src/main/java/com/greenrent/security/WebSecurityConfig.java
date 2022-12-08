@@ -36,7 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				"/login",
 				"/files/download/**",
 				"/files/display/**",
-				"/contactmessage/visitor").permitAll()
+				"/contactmessage/visitors",
+				"/car/visitors/**").permitAll()
 		.anyRequest().authenticated();
 		
 		http.addFilterBefore(authenticationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class);

@@ -9,4 +9,6 @@ public class ResponseMessage {
 	public final static String DELETE_RESPONSE_MESSAGE = "User Succesfully delete";
 
 	public final static String IMAGE_SAVED_MESSAGE ="Image file Saved succesfully.";
+	
+	public final static String CAR_SAVED_MESSAGE ="Car Succesfully saved";
 }

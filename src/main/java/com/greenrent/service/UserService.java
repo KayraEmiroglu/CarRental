@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -18,6 +19,7 @@ import com.greenrent.domain.User;
 import com.greenrent.domain.enums.RoleType;
 import com.greenrent.dto.UserDTO;
 import com.greenrent.dto.mapper.UserMapper;
+import com.greenrent.dto.request.AdminUserUpdateRequest;
 import com.greenrent.dto.request.RegisterRequest;
 import com.greenrent.dto.request.UpdatePasswordRequest;
 import com.greenrent.dto.request.UserUpdateRequest;
@@ -111,9 +113,14 @@ public class UserService {
 		
 		//hashlemek geri dönülemeyen bir algoritma yapar.
 		//ikincisini de hashliyoruz arkadaki işlemleri karşılaştırıyoruz.
-		if(!BCrypt.hashpw(passwordRequest.getOldPassword(), user.getPassword()).equals(user.getPassword())) {
+//		if(!BCrypt.hashpw(passwordRequest.getOldPassword(), user.getPassword()).equals(user.getPassword())) {
+//			throw new BadRequestException(ErrorMessage.PASSWORD_NOT_MATHCED_MESSAGE);
+//		}
+		
+		if(passwordEncoder.matches(passwordRequest.getOldPassword(), user.getPassword())) {
 			throw new BadRequestException(ErrorMessage.PASSWORD_NOT_MATHCED_MESSAGE);
 		}
+		
 		
 		String hashedPassword = passwordEncoder.encode(passwordRequest.getNewPassword());
 		user.setPassword(hashedPassword);
@@ -135,7 +142,7 @@ public class UserService {
 			throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
 		}
 		if(emailExist && !userUpdateRequest.getEmail().equals(user.getEmail())) {
-			throw new ConflictException(ErrorMessage.EMAIL_ALREADY_EXIST_MESSAGE);
+			throw new ConflictException(String.format(ErrorMessage.EMAIL_ALREADY_EXIST_MESSAGE, user.getEmail()));
 		}
 		
 		userRepository.update(id,userUpdateRequest.getFirstName(),userUpdateRequest.getLastName(),userUpdateRequest.getPhoneNumber()
@@ -143,6 +150,7 @@ public class UserService {
 		
 	}
 	
+
 	public void removeById(Long id) {
 		User user =userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
 		
@@ -151,6 +159,66 @@ public class UserService {
 		}
 		
 		userRepository.deleteById(id);
+	}
+
+
+	public void updateUserAuth(Long id,AdminUserUpdateRequest adminUserUpdateRequest) {
+		boolean emailExist = userRepository.existsByEmail(adminUserUpdateRequest.getEmail());
+		User user =userRepository.findById(id).orElseThrow(()->
+				new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
+		
+		if(user.getBuiltIn()) {
+			throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
+		}
+		
+		if(emailExist && !adminUserUpdateRequest.getEmail().equals(user.getEmail())) {
+			throw new ConflictException(String.format(ErrorMessage.EMAIL_ALREADY_EXIST_MESSAGE, user.getEmail()));
+		}
+		
+		if(adminUserUpdateRequest.getPassword()==null) {
+			adminUserUpdateRequest.setPassword(user.getPassword());
+		}else {
+			String encodedPassword = passwordEncoder.encode(adminUserUpdateRequest.getPassword());
+			adminUserUpdateRequest.setPassword(encodedPassword);
+		}
+		
+		
+		Set<String> userStrRoles =adminUserUpdateRequest.getRoles();
+		Set<Role> roles=convertRoles(userStrRoles);
+		
+		User updateUser = userMapper.adminUserUpdateRequestToUser(adminUserUpdateRequest);
+	
+		updateUser.setId(user.getId());
+		updateUser.setRoles(roles);
+		
+		userRepository.save(updateUser);
+	}
+	
+	public Set<Role> convertRoles(Set<String> pRoles){
+		Set<Role> roles = new HashSet<>();
+		
+		if(pRoles == null) {
+			Role userRole=roleRepository.findByName(RoleType.ROLE_CUSTOMER)
+					.orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessage.ROLE_NOT_FOUND_MESSAGE, RoleType.ROLE_CUSTOMER.name())));
+			roles.add(userRole);
+		}else {
+			pRoles.forEach(role->{
+				switch(role) {
+				case "Administrator":
+					Role adminRole=roleRepository.findByName(RoleType.ROLE_ADMIN)
+					.orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessage.ROLE_NOT_FOUND_MESSAGE, RoleType.ROLE_ADMIN.name())));
+					roles.add(adminRole);
+					break;
+				default:
+					Role userRole=roleRepository.findByName(RoleType.ROLE_CUSTOMER)
+					.orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessage.ROLE_NOT_FOUND_MESSAGE, RoleType.ROLE_CUSTOMER.name())));
+					roles.add(userRole);
+					break;
+				}
+			});
+		}
+		
+		return roles;
 	}
 	
 

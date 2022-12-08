@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.greenrent.dto.UserDTO;
+import com.greenrent.dto.request.AdminUserUpdateRequest;
 import com.greenrent.dto.request.UpdatePasswordRequest;
 import com.greenrent.dto.request.UserUpdateRequest;
 import com.greenrent.dto.response.GRResponse;
@@ -114,6 +115,20 @@ public class UserController {
 		
 		GRResponse response= new GRResponse();
 		response.setMessage(ResponseMessage.DELETE_RESPONSE_MESSAGE);
+		response.setSuccess(true);
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	//adminin herhangi bir kullanıcıyı güncellemesi 
+	@PutMapping("/{id}/auth")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<GRResponse> updateUserAuth(@PathVariable Long id,@Valid @RequestBody AdminUserUpdateRequest adminUserUpdateRequest){
+		
+		userService.updateUserAuth(id,adminUserUpdateRequest);
+		
+		GRResponse response= new GRResponse();
+		response.setMessage(ResponseMessage.UPDATE_RESPONSE_MESSAGE);
 		response.setSuccess(true);
 		
 		return ResponseEntity.ok(response);

@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +13,7 @@ import com.greenrent.domain.Car;
 import com.greenrent.domain.ImageFile;
 import com.greenrent.dto.CarDTO;
 import com.greenrent.dto.mapper.CarMapper;
+import com.greenrent.exception.BadRequestException;
 import com.greenrent.exception.ResourceNotFoundException;
 import com.greenrent.exception.message.ErrorMessage;
 import com.greenrent.repository.CarRepository;
@@ -65,7 +68,51 @@ public class CarService {
 		Car car = carRepository.findById(id).orElseThrow(()->
 		new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
 	
-		return carMapper.cartoCarDTO(car);
+		return carMapper.carToCarDTO(car);
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<CarDTO> findAllWithPage(Pageable pageable){
+		return carRepository.findAllCarWithPage(pageable);
+	}
+	
+	/**
+	 * this method is used to update aa car
+	 * @param id --> this is Car id that will be updated.
+	 * @param imageId --> this is image id
+	 * @param carDTO -->this is carDTO to keep data about the car
+	 */
+	@Transactional
+	public void updateCar(Long id,String imageId,CarDTO carDTO) {
+		Car foundCar = carRepository.findById(id).orElseThrow(()->
+		new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
+		
+		ImageFile imFile = imageFileRepository.findById(imageId).orElseThrow(()->
+		new ResourceNotFoundException(String.format(ErrorMessage.IMAGE_NOT_FOUND_MESSAGE, imageId)));
+		
+		if(foundCar.getBuiltIn()) {
+			throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
+		}
+		
+		Set<ImageFile> imgs = foundCar.getImage();
+		imgs.add(imFile);
+		
+		Car car = carMapper.carDTOtoCar(carDTO);
+		car.setId(foundCar.getId());
+		car.setImage(imgs);
+		
+		carRepository.save(car);	
+	}
+	
+	public void removeById(Long id) {
+		Car car = carRepository.findById(id).orElseThrow(()->
+		new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
+		
+		if(car.getBuiltIn()) {
+			throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
+		}
+		
+		carRepository.deleteById(id);
 	}
 	
 

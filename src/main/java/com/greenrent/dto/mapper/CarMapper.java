@@ -27,7 +27,7 @@ public interface CarMapper {
 	
 	//Bu yapıdan bu yapıya çevirirken ismini benim vericem bi methodu kullan
 	@Mapping(source = "image",target = "image", qualifiedByName = "getImageAsString")
-	CarDTO cartoCarDTO(Car car);
+	CarDTO carToCarDTO(Car car);
 	
 	@Named("getImageAsString")
 	public static Set<String> getImageId(Set<ImageFile> images){

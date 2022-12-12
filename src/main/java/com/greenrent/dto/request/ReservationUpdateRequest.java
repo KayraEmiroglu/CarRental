@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
+import com.greenrent.domain.enums.ReservationStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationRequest {
+public class ReservationUpdateRequest {
 	
 	//DTO ların bir neden oluşturulma nedeni ihtiyacımız olan datayı dönmek
 	//fazladan field oluşturmamak.
@@ -37,5 +37,7 @@ public class ReservationRequest {
 	 @Size(max = 150 ,message = "Drop off location mst be max 150 chars")
 	 @NotNull(message = "Please provide the Drop off Location time of the reservation")
 	 private String dropOffLocation;
+	 
+	 private ReservationStatus status;
 	 
 }

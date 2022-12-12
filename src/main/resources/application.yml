@@ -4,7 +4,8 @@ server:
   include-binding-errors: always
   include-message: always
   include-stacktrace: never
-  
+ #servlet:
+  #context-path: /car-rental/api  
   
 spring: 
  datasource:

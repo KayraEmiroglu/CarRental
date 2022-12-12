@@ -67,5 +67,4 @@ public class Reservation {
 		 return ChronoUnit.HOURS.between(pickUpTime, dropOffTime);
 	 }
 	
-	
 }

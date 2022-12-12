@@ -80,7 +80,7 @@ public class ReservationService {
 	public void updateReservation(Long reservationId, Long carId, ReservationUpdateRequest reservationUpdateRequest) {
 		
 		//Burda DTO almak istememe sebebimiz direk veritabanındaki reservation'ı update etme isteğimizden kaynaklanıyor.
-		Reservation reservation =reservationRepository.findById(reservationId).orElseThrow(()->
+		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->
 				new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, reservationId)));
 		
 		checkReservationTimeIsCorrect(reservationUpdateRequest.getPickUpTime() ,reservationUpdateRequest.getDropOffTime());

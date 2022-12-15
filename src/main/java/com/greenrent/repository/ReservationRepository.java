@@ -38,6 +38,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>{
 			@Param("status") ReservationStatus[] status);
 	
 	
+	Optional<ReservationDTO> findByIdAndUserId(Long id,User user);
 	
 	List<ReservationDTO> findAllBy();
 	
@@ -45,5 +46,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>{
 	
 	List<ReservationDTO> findAllByUserId(User userId);
 	
-
+	
 }

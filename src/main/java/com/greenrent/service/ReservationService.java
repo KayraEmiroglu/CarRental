@@ -58,7 +58,7 @@ public class ReservationService {
 		
 		reservation.setCarId(car);
 		reservation.setUserId(user);
-		Double totalPrice = getTotalPrice(car, reservation.getPickUpTime(), reservation.getDropOffTime());
+		Double totalPrice = getTotalPrice(carId, reservation.getPickUpTime(), reservation.getDropOffTime());
 		reservation.setTotalPrice(totalPrice);
 		
 		reservationRepository.save(reservation);
@@ -75,12 +75,34 @@ public class ReservationService {
 			new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));
 	}
 	
+	//Id ve userId'ye göre kullanıcının reservation bilgilerinin dönmesi
+	@Transactional(readOnly = true)
+	public ReservationDTO findByIdAndUserId(Long id,Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(()->
+				new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, userId)));
+		
+		return reservationRepository.findByIdAndUserId(id, user).orElseThrow(()->
+				new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id)));		
+	}
+		
+	
+	//------------DeleteByIdd------------
+	public void removeById(Long id) {
+		boolean exist = reservationRepository.existsById(id);
+		
+		if(!exist) {
+			throw new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, id));
+		}
+		
+		reservationRepository.deleteById(id);
+	}
+	
 
 	//--------------UpdateMethod----------------
 	public void updateReservation(Long reservationId, Long carId, ReservationUpdateRequest reservationUpdateRequest) {
 		
 		//Burda DTO almak istememe sebebimiz direk veritabanındaki reservation'ı update etme isteğimizden kaynaklanıyor.
-		Reservation reservation =reservationRepository.findById(reservationId).orElseThrow(()->
+		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->
 				new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, reservationId)));
 		
 		checkReservationTimeIsCorrect(reservationUpdateRequest.getPickUpTime() ,reservationUpdateRequest.getDropOffTime());
@@ -98,7 +120,7 @@ public class ReservationService {
 			throw new BadRequestException(ErrorMessage.CAR_NOT_AVAILABLE_MESSAGE);
 		}
 		
-		Double totalPrice = getTotalPrice(car,reservationUpdateRequest.getPickUpTime(),reservationUpdateRequest.getDropOffTime());
+		Double totalPrice = getTotalPrice(carId,reservationUpdateRequest.getPickUpTime(),reservationUpdateRequest.getDropOffTime());
 		
 		reservation.setTotalPrice(totalPrice);
 		reservation.setCarId(car);
@@ -124,7 +146,11 @@ public class ReservationService {
 	
 	//-----------------------Business Logic--------------------
 	
-	private Double getTotalPrice(Car car,LocalDateTime pickUpTime,LocalDateTime dropOffTime) {
+	public Double getTotalPrice(Long carId,LocalDateTime pickUpTime,LocalDateTime dropOffTime) {
+		
+		Car car = carRepository.findById(carId).orElseThrow(()->
+				new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, carId)));
+		
 		Long hours = (new Reservation()).getTotalHours(pickUpTime, dropOffTime);
 		
 		return car.getPricePerHour()*hours;

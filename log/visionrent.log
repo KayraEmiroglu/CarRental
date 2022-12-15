@@ -138,3 +138,45 @@
 2022-12-16 00:52:37,773 INFO  [RMI TCP Connection(4)-127.0.0.1] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean:Closing JPA EntityManagerFactory for persistence unit 'default'
 2022-12-16 00:52:37,776 INFO  [RMI TCP Connection(4)-127.0.0.1] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Shutdown initiated...
 2022-12-16 00:52:37,778 INFO  [RMI TCP Connection(4)-127.0.0.1] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Shutdown completed.
+2022-12-16 01:07:28,432 INFO  [restartedMain] com.greenrent.GreenRentApplication:Starting GreenRentApplication using Java 17.0.4 on LAPTOP-LP556Q47 with PID 1252 (D:\CarRental2\GreenRent\target\classes started by kayra in D:\CarRental2\GreenRent)
+2022-12-16 01:07:28,433 DEBUG [restartedMain] com.greenrent.GreenRentApplication:Running with Spring Boot v2.7.6, Spring v5.3.24
+2022-12-16 01:07:28,433 INFO  [restartedMain] com.greenrent.GreenRentApplication:No active profile set, falling back to 1 default profile: "default"
+2022-12-16 01:07:28,479 INFO  [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor:Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-12-16 01:07:28,480 INFO  [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor:For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-12-16 01:07:29,318 INFO  [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate:Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-12-16 01:07:29,382 INFO  [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate:Finished Spring Data repository scanning in 55 ms. Found 6 JPA repository interfaces.
+2022-12-16 01:07:29,939 INFO  [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer:Tomcat initialized with port(s): 8080 (http)
+2022-12-16 01:07:29,952 INFO  [restartedMain] org.apache.catalina.core.StandardService:Starting service [Tomcat]
+2022-12-16 01:07:29,952 INFO  [restartedMain] org.apache.catalina.core.StandardEngine:Starting Servlet engine: [Apache Tomcat/9.0.69]
+2022-12-16 01:07:30,030 INFO  [restartedMain] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]:Initializing Spring embedded WebApplicationContext
+2022-12-16 01:07:30,031 INFO  [restartedMain] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext:Root WebApplicationContext: initialization completed in 1551 ms
+2022-12-16 01:07:30,245 INFO  [restartedMain] org.hibernate.jpa.internal.util.LogHelper:HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-12-16 01:07:30,285 INFO  [restartedMain] org.hibernate.Version:HHH000412: Hibernate ORM core version 5.6.14.Final
+2022-12-16 01:07:30,427 INFO  [restartedMain] org.hibernate.annotations.common.Version:HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-12-16 01:07:30,512 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Starting...
+2022-12-16 01:07:30,659 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Start completed.
+2022-12-16 01:07:30,674 INFO  [restartedMain] org.hibernate.dialect.Dialect:HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-12-16 01:07:31,432 INFO  [restartedMain] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator:HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-12-16 01:07:31,439 INFO  [restartedMain] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean:Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-12-16 01:07:31,896 WARN  [restartedMain] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration:spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-12-16 01:07:31,963 DEBUG [restartedMain] com.greenrent.security.jwt.AuthTokenFilter:Filter 'authenticationJwtTokenFilter' configured for use
+2022-12-16 01:07:32,293 INFO  [restartedMain] org.springframework.security.web.DefaultSecurityFilterChain:Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@29bbd1ad, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6165a2a9, org.springframework.security.web.context.SecurityContextPersistenceFilter@74921577, org.springframework.security.web.header.HeaderWriterFilter@513fc980, org.springframework.security.web.authentication.logout.LogoutFilter@5e99458, com.greenrent.security.jwt.AuthTokenFilter@3d975f91, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@428cc44f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1cf4b871, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@13701b75, org.springframework.security.web.session.SessionManagementFilter@321ff283, org.springframework.security.web.access.ExceptionTranslationFilter@12835fc7, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7d646ea1]
+2022-12-16 01:07:33,086 INFO  [restartedMain] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer:LiveReload server is running on port 35729
+2022-12-16 01:07:33,091 INFO  [restartedMain] org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver:Exposing 1 endpoint(s) beneath base path '/actuator'
+2022-12-16 01:07:33,154 INFO  [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer:Tomcat started on port(s): 8080 (http) with context path ''
+2022-12-16 01:07:33,170 INFO  [restartedMain] com.greenrent.GreenRentApplication:Started GreenRentApplication in 5.132 seconds (JVM running for 5.841)
+2022-12-16 01:08:02,093 INFO  [RMI TCP Connection(4)-127.0.0.1] org.springframework.boot.admin.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin:Application shutdown requested.
+2022-12-16 01:08:02,109 INFO  [RMI TCP Connection(4)-127.0.0.1] org.apache.catalina.core.StandardService:Stopping service [Tomcat]
+2022-12-16 01:08:02,113 WARN  [RMI TCP Connection(4)-127.0.0.1] org.apache.catalina.loader.WebappClassLoaderBase:The web application [ROOT] appears to have started a thread named [HikariPool-1 housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.4/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.4/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.4/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+ java.base@17.0.4/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@17.0.4/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@17.0.4/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+ java.base@17.0.4/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.4/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.4/java.lang.Thread.run(Thread.java:833)
+2022-12-16 01:08:02,120 INFO  [RMI TCP Connection(4)-127.0.0.1] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean:Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-12-16 01:08:02,123 INFO  [RMI TCP Connection(4)-127.0.0.1] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Shutdown initiated...
+2022-12-16 01:08:02,125 INFO  [RMI TCP Connection(4)-127.0.0.1] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Shutdown completed.

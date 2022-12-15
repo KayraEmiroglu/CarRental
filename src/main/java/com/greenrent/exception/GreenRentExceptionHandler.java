@@ -4,6 +4,8 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -118,6 +120,14 @@ public class GreenRentExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(RuntimeException.class)
 	protected ResponseEntity<Object> handleGeneralException(RuntimeException ex,WebRequest request) {
 		ApiResponseError error = new ApiResponseError(HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage(),request.getDescription(false));
+		
+		return buildResponseEntity(error);
+	}
+	
+	//Hiçbir exception'a yakalanmazsa buna yakalancak
+	@ExceptionHandler(Exception.class)
+	protected ResponseEntity<Object> handleException(Exception ex,HttpServletRequest request) {
+		ApiResponseError error = new ApiResponseError(HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage(),request.getServletPath());
 		
 		return buildResponseEntity(error);
 	}

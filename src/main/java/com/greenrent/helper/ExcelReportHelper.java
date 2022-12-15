@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.greenrent.domain.Car;
+import com.greenrent.domain.Reservation;
 import com.greenrent.domain.User;
 
 public class ExcelReportHelper {
@@ -18,9 +20,16 @@ public class ExcelReportHelper {
 	static String SHEET_USER = "Users";
 	static String[] USER_HEADERS = {"id","FirstName","LastName","PhoneNumber","Email","Address","ZipCode","Roles"};
 	
+	static String SHEET_CAR ="Cars";
+	static String[] CAR_HEADERS = {"id","Model","Doors","Seats","Luggage","Transmission","AirConditioning","Age","PricePerHour","FuelType"};
+	
+	static String SHEET_RESERVATION ="reservations";
+	static String[] RESERVATION_HEADERS =
+	{"id","CarId","Car Model","CustomerId","CustomerFullName", "CustomerPhoneNumber","PickUpTime","DropOffTime","PickUpLocation","DropOffLocation","Status"};
+	
+	
 	public static ByteArrayInputStream getUsersExcellReport(List<User> users) throws IOException {
-		Workbook workBook = new XSSFWorkbook();
-		
+		Workbook workBook = new XSSFWorkbook();		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();		
 		Sheet sheet =workBook.createSheet(SHEET_USER);
 		
@@ -48,7 +57,81 @@ public class ExcelReportHelper {
 		
 		workBook.write(out);
 		
+		workBook.close();
+		
 		return new ByteArrayInputStream(out.toByteArray());
 	}
+	
+	public static ByteArrayInputStream getCarsExcellReport(List<Car> cars) throws IOException {
+		Workbook workBook = new XSSFWorkbook();		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();		
+		Sheet sheet =workBook.createSheet("SHEET_CAR");
+		
+		Row headerRow = sheet.createRow(0);
+		
+		for(int column=0; column<CAR_HEADERS.length; column++) {
+			Cell cell= headerRow.createCell(column);
+			cell.setCellValue(CAR_HEADERS[column]);
+		}
+		
+		int rowId=1;
+		
+		for (Car car : cars) {
+			Row row = sheet.createRow(rowId++);
+			
+			row.createCell(0).setCellValue(car.getId());
+			row.createCell(1).setCellValue(car.getModel());
+			row.createCell(2).setCellValue(car.getDoors());
+			row.createCell(3).setCellValue(car.getSeats());
+			row.createCell(4).setCellValue(car.getLuggage());
+			row.createCell(5).setCellValue(car.getTransmission());
+			//row.createCell(6).setCellValue(car.getAirConditioning()==true?"Yes":"No");
+			row.createCell(6).setCellValue(car.getAirConditioning());
+			row.createCell(7).setCellValue(car.getAge());	
+			row.createCell(7).setCellValue(car.getPricePerHour());	
+			row.createCell(7).setCellValue(car.getFuelType());	
+		}
+		
+		workBook.write(out);	
+		workBook.close();	
+		return new ByteArrayInputStream(out.toByteArray());
+	}
+	
+	
+	public static ByteArrayInputStream getReservationsExcellReport(List<Reservation> reservations) throws IOException {
+		Workbook workBook = new XSSFWorkbook();		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();		
+		Sheet sheet =workBook.createSheet("SHEET_RESERVATION");
+		
+		Row headerRow = sheet.createRow(0);
+		
+		for(int column=0; column<RESERVATION_HEADERS.length; column++) {
+			Cell cell= headerRow.createCell(column);
+			cell.setCellValue(RESERVATION_HEADERS[column]);
+		}
+		
+		int rowId=1;
+		
+		for (Reservation r : reservations) {
+			Row row = sheet.createRow(rowId++);
+			
+			row.createCell(0).setCellValue(r.getId());
+			row.createCell(1).setCellValue(r.getCarId().getId());
+			row.createCell(2).setCellValue(r.getCarId().getModel());
+			row.createCell(3).setCellValue(r.getUserId().getFirstName()+" "+r.getUserId().getLastName());
+			row.createCell(4).setCellValue(r.getUserId().getPhoneNumber());
+			row.createCell(5).setCellValue(r.getPickUpTime().toString());			
+			row.createCell(6).setCellValue(r.getDropOffTime().toString());
+			row.createCell(7).setCellValue(r.getPickUpLocation().toString());	
+			row.createCell(7).setCellValue(r.getDropOffLocation().toString());	
+			row.createCell(7).setCellValue(r.getStatus().toString());	
+		}
+		
+		workBook.write(out);	
+		workBook.close();	
+		return new ByteArrayInputStream(out.toByteArray());
+	}
+	
+	
 
 }
